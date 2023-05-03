@@ -83,6 +83,7 @@ class Fighter extends Sprite {
         this.color = color
         this.isAttacking
         this.health = 100
+        this.dead = false
 
         this.framesCurrent = 0
         this.framesElapsed = 0 // 애니메이션 속도 조절을 위해 필요
@@ -111,7 +112,8 @@ class Fighter extends Sprite {
 
     update() {
         this.draw()
-        this.animateFrames()
+
+        if (!this.dead) this.animateFrames()
 
         // attack boxes
         this.attackBox.position.x = this.position.x + this.attackBox.offset.x
@@ -142,11 +144,24 @@ class Fighter extends Sprite {
     }
 
     takeHit() {
-        this.switchSprite('takeHit')
         this.health -= 20
+
+        if (this.health <= 0) {
+            this.switchSprite('death')
+        } else {
+            this.switchSprite('takeHit')
+        }
     }
 
     switchSprite(sprite) {
+        //
+        if (this.image === this.sprites.death.image) {
+            if (this.framesCurrent === this.sprites.death.framesMax - 1) {
+                this.dead = true
+            }
+            return
+        }
+
         // overriding all other animations with the attack animation
         if (
             this.image === this.sprites.attack1.image &&
@@ -199,6 +214,13 @@ class Fighter extends Sprite {
                 if (this.image !== this.sprites.takeHit.image) {
                     this.image = this.sprites.takeHit.image
                     this.framesMax = this.sprites.takeHit.framesMax
+                    this.framesCurrent = 0
+                }
+                break
+            case 'death':
+                if (this.image !== this.sprites.death.image) {
+                    this.image = this.sprites.death.image
+                    this.framesMax = this.sprites.death.framesMax
                     this.framesCurrent = 0
                 }
                 break

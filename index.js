@@ -70,6 +70,10 @@ const player = new Fighter({
         takeHit: {
             imageSrc: './img/samuraiMack/Take Hit - white silhouette.png',
             framesMax: 4
+        },
+        death: {
+            imageSrc: './img/samuraiMack/Death.png',
+            framesMax: 6
         }
     },
     attackBox: {
@@ -127,6 +131,10 @@ const enemy = new Fighter({
         takeHit: {
             imageSrc: './img/kenji/Take hit.png',
             framesMax: 3
+        },
+        death: {
+            imageSrc: './img/kenji/Death.png',
+            framesMax: 7
         }
     },
     attackBox: {
@@ -267,42 +275,48 @@ function animate() {
 animate()
 
 window.addEventListener('keydown', (event) => {
-    switch(event.key) {
-        case 'd':
-            // player.velocity.x = 1
-            keys.d.pressed = true
-            player.lastKey = 'd'
-            break
-        case 'a':
-            // player.velocity.x = -1
-            keys.a.pressed = true
-            player.lastKey = 'a'
-            break
-        case 'w':
-            // player.velocity.x = -1
-            player.velocity.y = -20
-            break
-        case ' ':
-            player.attack()
-            break
-
-        case 'ArrowRight':
-            keys.ArrowRight.pressed = true
-            enemy.lastKey = 'ArrowRight'
-            break
-        case 'ArrowLeft':
-            keys.ArrowLeft.pressed = true
-            enemy.lastKey = 'ArrowLeft'
-            break
-        case 'ArrowUp':
-            enemy.velocity.y = -20
-            break
-        case 'ArrowDown':
-            // enemy.isAttacking = true
-            enemy.attack() // 약간 enemy.attack() 키가 눌렸을때 action이 부자연스러운 느낌은 나만 갖는 생각인가?
-            break
+    if (!player.dead) {
+        switch(event.key) {
+            case 'd':
+                // player.velocity.x = 1
+                keys.d.pressed = true
+                player.lastKey = 'd'
+                break
+            case 'a':
+                // player.velocity.x = -1
+                keys.a.pressed = true
+                player.lastKey = 'a'
+                break
+            case 'w':
+                // player.velocity.x = -1
+                player.velocity.y = -20
+                break
+            case ' ':
+                player.attack()
+                break
+        }
     }
-    // console.log(event.key);
+
+    if (!enemy.dead) {
+        switch(event.key) {
+            case 'ArrowRight':
+                keys.ArrowRight.pressed = true
+                enemy.lastKey = 'ArrowRight'
+                break
+            case 'ArrowLeft':
+                keys.ArrowLeft.pressed = true
+                enemy.lastKey = 'ArrowLeft'
+                break
+            case 'ArrowUp':
+                enemy.velocity.y = -20
+                break
+            case 'ArrowDown':
+                // enemy.isAttacking = true
+                enemy.attack() // 약간 enemy.attack() 키가 눌렸을때 action이 부자연스러운 느낌은 나만 갖는 생각인가?
+                break
+        }
+        // console.log(event.key);
+    }
 })
 
 window.addEventListener('keyup', (event) => {
