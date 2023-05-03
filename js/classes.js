@@ -141,12 +141,24 @@ class Fighter extends Sprite {
         // }, 1000)
     }
 
+    takeHit() {
+        this.switchSprite('takeHit')
+        this.health -= 20
+    }
+
     switchSprite(sprite) {
+        // overriding all other animations with the attack animation
         if (
-            this.image === this.sprites.attack1.image
-            && this.framesCurrent < this.sprites.attack1.framesMax - 1
-            ) return // 이게 있어야 잘 보이는 이유는?
-            
+            this.image === this.sprites.attack1.image &&
+            this.framesCurrent < this.sprites.attack1.framesMax - 1
+        ) return // 이게 있어야 아래 switch()를 벗어남!
+        
+        // override when fighter gets hit
+        if (
+            this.image === this.sprites.takeHit.image &&
+            this.framesCurrent < this.sprites.takeHit.framesMax - 1
+        ) return
+
         switch (sprite) {
             case 'idle':
                 if (this.image !== this.sprites.idle.image) {
@@ -166,18 +178,28 @@ class Fighter extends Sprite {
                 if (this.image !== this.sprites.jump.image) {
                     this.image = this.sprites.jump.image
                     this.framesMax = this.sprites.jump.framesMax
+                    this.framesCurrent = 0
                 }
                 break
             case 'fall':
                 if (this.image !== this.sprites.fall.image) {
                     this.image = this.sprites.fall.image
                     this.framesMax = this.sprites.fall.framesMax
+                    this.framesCurrent = 0
                 }
                 break
             case 'attack1':
                 if (this.image !== this.sprites.attack1.image) {
                     this.image = this.sprites.attack1.image
                     this.framesMax = this.sprites.attack1.framesMax
+                    this.framesCurrent = 0
+                }
+                break
+            case 'takeHit':
+                if (this.image !== this.sprites.takeHit.image) {
+                    this.image = this.sprites.takeHit.image
+                    this.framesMax = this.sprites.takeHit.framesMax
+                    this.framesCurrent = 0
                 }
                 break
         }
