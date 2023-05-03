@@ -26,7 +26,6 @@ const shop = new Sprite ({
     framesMax: 6
 })
 
-
 const player = new Fighter({
     position: {
         x: 0,
@@ -84,6 +83,35 @@ const enemy = new Fighter({
     offset: {
         x: -50,
         y: 0
+    },
+    imageSrc: './img/kenji/Idle.png',
+    framesMax: 4,
+    scale: 2.5,
+    offset: {
+        x: 215,
+        y: 167
+    },
+    sprites: {
+        idle: {
+            imageSrc: './img/kenji/Idle.png',
+            framesMax: 4
+        },
+        run: {
+            imageSrc: './img/kenji/Run.png',
+            framesMax: 8
+        },
+        jump: {
+            imageSrc: './img/kenji/Jump.png',
+            framesMax: 2
+        },
+        fall: {
+            imageSrc: './img/kenji/Fall.png',
+            framesMax: 2
+        },
+        attack1: {
+            imageSrc: './img/kenji/Attack1.png',
+            framesMax: 4
+        },
     }
 })
 
@@ -116,7 +144,7 @@ function animate() {
     shop.update()
 
     player.update()
-    // enemy.update()
+    enemy.update()
 
     player.velocity.x = 0
     enemy.velocity.x = 0
@@ -144,6 +172,7 @@ function animate() {
         player.switchSprite('idle')
     }
 
+    // jumping
     if (player.velocity.y < 0) {
         player.switchSprite('jump')
         // player.image = player.sprites.jump.image
@@ -155,8 +184,19 @@ function animate() {
     // enemy movement
     if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
         enemy.velocity.x = -5
+        enemy.switchSprite('run')
     } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
         enemy.velocity.x = 5
+        enemy.switchSprite('run')
+    } else {
+        enemy.switchSprite('idle')
+    }
+
+    // jumping
+    if (enemy.velocity.y < 0) {
+        enemy.switchSprite('jump')
+    } else if (enemy.velocity.y > 0) {
+        enemy.switchSprite('fall')
     }
 
     // collision detection
@@ -218,7 +258,7 @@ window.addEventListener('keydown', (event) => {
             break
         case 'ArrowDown':
             // enemy.isAttacking = true
-            enemy.attack()
+            enemy.attack() // 약간 enemy.attack() 키가 눌렸을때 action이 부자연스러운 느낌은 나만 갖는 생각인가?
             break
     }
     // console.log(event.key);
